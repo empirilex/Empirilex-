@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Foxx Canada — Pig Wash Board</title>
+<meta name="theme-color" content="#0d0d14" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="apple-mobile-web-app-title" content="Pig Wash" />
+<link rel="icon" type="image/png" href="foxx-pig-wash/icon.png" />
+<link rel="apple-touch-icon" href="foxx-pig-wash/icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ── ROOT TOKENS ─────────────────────────────────────────── */
+:root {
+  --bg:          #0d0d14;
+  --surface:     #141420;
+  --card:        #1c1c2a;
+  --card-hover:  #21212f;
+  --border:      #2a2a3e;
+  --border-dim:  #1d1d2c;
+  --gold:        #d4af37;
+  --gold-light:  #f5e7a3;
+  --gold-dark:   #8b6914;
+  --amber:       #f59e0b;
+  --green:       #10b981;
+  --red:         #ef4444;
+  --grey-chip:   #64748b;
+  --text:        #e8e8f0;
+  --text-dim:    #a0a0c0;
+  --muted:       #7070a0;
+  --faint:       #3c3c5a;
+
+  --font-head: 'Montserrat', sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius:    12px;
+  --radius-lg: 18px;
+  --shadow:    0 4px 24px rgba(0,0,0,.45);
+  --shadow-lg: 0 16px 56px rgba(0,0,0,.65);
+  --transition: .18s ease;
+}
+
+/* ── RESET ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select { font-family: inherit; }
+
+/* ── HEADER ──────────────────────────────────────────────── */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 6px 32px rgba(0,0,0,.5);
+}
+.hw { max-width: 820px; margin: 0 auto; padding: 0 16px; }
+
+/* top row */
+.h-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0 12px;
+  gap: 12px;
+}
+
+/* brand */
+.brand { display: flex; align-items: center; gap: 13px; }
+.brand-icon-box {
+  width: 44px; height: 44px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(212,175,55,.14), rgba(212,175,55,.04));
+  border: 1px solid rgba(212,175,55,.28);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.brand-icon { width: 30px; height: 30px; object-fit: contain; filter: drop-shadow(0 1px 4px rgba(0,0,0,.5)); }
+.brand-text {}
+.brand-name {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 1;
+}
+.gold-bar {
+  height: 2px;
+  border-radius: 2px;
+  margin: 4px 0 4px;
+  background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold) 35%, var(--gold-light) 50%, var(--gold) 65%, var(--gold-dark) 100%);
+}
+.brand-sub {
+  font-family: var(--font-head);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* header action buttons */
+.h-actions { display: flex; align-items: center; gap: 8px; }
+
+.btn-export {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-head);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted);
+  padding: 9px 13px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: transparent;
+  transition: var(--transition);
+}
+.btn-export:hover { color: var(--gold); border-color: rgba(212,175,55,.3); background: rgba(212,175,55,.04); }
+.btn-export svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+
+.btn-add {
+  display: flex; align-items: center; gap: 7px;
+  font-family: var(--font-head);
+  font-size: 12px; font-weight: 800;
+  letter-spacing: .08em; text-transform: uppercase;
+  background: linear-gradient(135deg, var(--amber) 0%, #d97706 100%);
+  color: #000;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 14px rgba(245,158,11,.28);
+  transition: var(--transition);
+}
+.btn-add:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(245,158,11,.4); }
+.btn-add:active { transform: scale(.97); }
+.btn-add svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; fill: none; }
+
+/* stats */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding-bottom: 14px;
+}
+.stat {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px 12px 18px;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+}
+.stat::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.stat.amber::after { background: radial-gradient(ellipse at 0 0, rgba(245,158,11,.1), transparent 75%); }
+.stat.green::after  { background: radial-gradient(ellipse at 0 0, rgba(16,185,129,.1), transparent 75%); }
+.stat.red::after    { background: radial-gradient(ellipse at 0 0, rgba(239,68,68,.1), transparent 75%); }
+.stat:hover::after  { opacity: 1; }
+.stat-accent {
+  position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+}
+.stat.amber .stat-accent { background: linear-gradient(to bottom, var(--amber), #d97706); }
+.stat.green .stat-accent  { background: linear-gradient(to bottom, var(--green), #059669); }
+.stat.red   .stat-accent  { background: linear-gradient(to bottom, var(--red),  #dc2626); }
+.stat-n {
+  font-family: var(--font-head);
+  font-size: 28px; font-weight: 900; line-height: 1;
+  position: relative;
+}
+.stat.amber .stat-n { color: var(--amber); }
+.stat.green .stat-n  { color: var(--green); }
+.stat.red   .stat-n  { color: var(--red); }
+.stat-lbl {
+  font-family: var(--font-head);
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); margin-top: 5px; position: relative;
+}
+
+/* ── MAIN ────────────────────────────────────────────────── */
+main { max-width: 820px; margin: 0 auto; padding: 16px 16px 120px; }
+
+/* banner */
+.banner {
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  font-size: 13px; font-weight: 600;
+  margin-bottom: 14px;
+  line-height: 1.55;
+}
+.banner.err  { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.28); color: #fca5a5; }
+.banner.warn { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.28); color: #fde68a; }
+
+/* pills */
+.pills {
+  display: flex; gap: 6px; overflow-x: auto;
+  padding-bottom: 14px; scrollbar-width: none;
+}
+.pills::-webkit-scrollbar { display: none; }
+.pill {
+  white-space: nowrap; flex-shrink: 0;
+  font-family: var(--font-head);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--card);
+  transition: var(--transition);
+}
+.pill:hover { border-color: rgba(212,175,55,.28); color: var(--text-dim); }
+.pill.on {
+  background: linear-gradient(135deg, rgba(212,175,55,.16), rgba(212,175,55,.06));
+  border-color: rgba(212,175,55,.45);
+  color: var(--gold);
+}
+
+/* search */
+.search-wrap { position: relative; margin-bottom: 16px; }
+.search-ico {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  width: 16px; height: 16px; color: var(--muted); pointer-events: none;
+}
+.search-ico svg { width: 100%; height: 100%; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+.search {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px 12px 42px;
+  font-size: 15px; color: var(--text);
+  transition: var(--transition); outline: none;
+}
+.search::placeholder { color: var(--faint); }
+.search:focus { border-color: rgba(212,175,55,.4); box-shadow: 0 0 0 3px rgba(212,175,55,.07); }
+
+/* empty */
+.empty {
+  text-align: center; padding: 64px 24px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg); color: var(--muted);
+}
+.empty .e-ico { font-size: 44px; margin-bottom: 14px; opacity: .55; }
+.empty h3 {
+  font-family: var(--font-head);
+  font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 6px;
+}
+.empty p { font-size: 13px; }
+.empty b { color: var(--text); }
+
+/* ── CARDS ───────────────────────────────────────────────── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 10px; overflow: hidden;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.card:hover { border-color: rgba(255,255,255,.1); }
+.card.rebuild { border-color: rgba(239,68,68,.32); }
+.card.rebuild:hover { border-color: rgba(239,68,68,.5); box-shadow: 0 4px 20px rgba(239,68,68,.08); }
+
+.card-head {
+  width: 100%; display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; text-align: left;
+  transition: background var(--transition);
+}
+.card-head:hover { background: rgba(255,255,255,.02); }
+
+.pig-ico {
+  width: 40px; height: 40px; flex-shrink: 0;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+}
+.pig-ico img { width: 28px; height: 28px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,.4)); }
+
+.sn-box {
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px; min-width: 64px; text-align: center;
+}
+.sn-lbl {
+  font-family: var(--font-head);
+  font-size: 7px; letter-spacing: .24em; text-transform: uppercase;
+  color: var(--faint); display: block;
+}
+.sn-val {
+  font-family: var(--font-head);
+  font-size: 18px; font-weight: 900; line-height: 1.1;
+  color: var(--text); display: block;
+}
+
+.card-mid { flex: 1; min-width: 0; }
+.chips { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 4px; }
+.chip {
+  font-family: var(--font-head);
+  font-size: 9px; font-weight: 800;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: var(--radius-xs);
+}
+.chip.inshop  { background: rgba(245,158,11,.13); color: var(--amber); border: 1px solid rgba(245,158,11,.25); }
+.chip.washed  { background: rgba(16,185,129,.13); color: var(--green); border: 1px solid rgba(16,185,129,.25); }
+.chip.shipped { background: rgba(100,116,139,.13); color: var(--grey-chip); border: 1px solid rgba(100,116,139,.25); }
+.chip.flag    { background: rgba(239,68,68,.13); color: var(--red); border: 1px solid rgba(239,68,68,.25); }
+.card-who {
+  font-size: 13px; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.card-dates { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.card-caret {
+  color: var(--faint); flex-shrink: 0;
+  transition: transform var(--transition);
+}
+.card.open .card-caret { transform: rotate(180deg); }
+.card-caret svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; fill: none; }
+
+/* expanded body */
+.card-body {
+  border-top: 1px solid var(--border-dim);
+  background: rgba(0,0,0,.2);
+  padding: 16px 18px;
+}
+.acts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.act {
+  font-family: var(--font-head);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .07em; text-transform: uppercase;
+  padding: 10px 16px; border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.act:active { transform: scale(.97); }
+.act.wash {
+  background: rgba(16,185,129,.12); color: var(--green);
+  border: 1px solid rgba(16,185,129,.28);
+}
+.act.wash:hover { background: rgba(16,185,129,.22); }
+.act.ship {
+  background: rgba(212,175,55,.1); color: var(--gold);
+  border: 1px solid rgba(212,175,55,.28);
+}
+.act.ship:hover { background: rgba(212,175,55,.2); }
+.act.flag { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.act.flag:hover { border-color: rgba(239,68,68,.3); color: var(--red); }
+.act.flag.on { background: rgba(239,68,68,.1); color: var(--red); border-color: rgba(239,68,68,.28); }
+.act.flag.on:hover { background: rgba(239,68,68,.2); }
+
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.f-lbl {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); margin: 12px 0 5px;
+}
+.inp {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 15px; color: var(--text);
+  transition: var(--transition); outline: none;
+}
+.inp::placeholder { color: var(--faint); }
+.inp:focus { border-color: rgba(212,175,55,.4); box-shadow: 0 0 0 3px rgba(212,175,55,.07); }
+textarea.inp { resize: vertical; }
+.pickup-by { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.pickup-by b { color: var(--text-dim); }
+.btn-del {
+  display: block; margin: 12px 0 0 auto;
+  font-size: 12px; font-weight: 700;
+  color: var(--red); opacity: .6;
+  text-decoration: underline; transition: opacity var(--transition);
+}
+.btn-del:hover { opacity: 1; }
+
+/* ── MODAL / SHEET ───────────────────────────────────────── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(5px);
+  z-index: 100;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+@media (min-width: 640px) {
+  .overlay { align-items: center; }
+  .sheet { border-radius: var(--radius-lg) !important; max-height: 88vh !important; }
+}
+.sheet {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  width: 100%; max-width: 480px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 6px 20px 28px;
+  max-height: 94vh; overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+.sheet-handle {
+  width: 36px; height: 4px;
+  background: var(--border); border-radius: 2px;
+  margin: 10px auto 18px;
+}
+.sheet-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px;
+}
+.sheet-title {
+  font-family: var(--font-head);
+  font-size: 15px; font-weight: 900;
+  letter-spacing: .07em; text-transform: uppercase;
+  color: var(--text);
+}
+.sheet-x {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--muted); font-size: 15px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.sheet-x:hover { color: var(--text); border-color: rgba(255,255,255,.18); }
+
+.sizes { display: flex; gap: 7px; margin-bottom: 2px; }
+.sz {
+  flex: 1; padding: 10px 0; text-align: center;
+  border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: var(--card);
+  font-family: var(--font-head); font-weight: 800; font-size: 12px;
+  color: var(--muted); transition: var(--transition);
+}
+.sz:hover { border-color: rgba(212,175,55,.28); color: var(--text-dim); }
+.sz.on {
+  background: rgba(212,175,55,.12);
+  border-color: rgba(212,175,55,.45);
+  color: var(--gold);
+}
+
+.btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--amber) 0%, #d97706 100%);
+  color: #000;
+  font-family: var(--font-head);
+  font-size: 14px; font-weight: 900;
+  letter-spacing: .09em; text-transform: uppercase;
+  padding: 14px; border-radius: var(--radius);
+  margin-top: 20px;
+  box-shadow: 0 4px 14px rgba(245,158,11,.22);
+  transition: var(--transition);
+}
+.btn-submit:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 7px 24px rgba(245,158,11,.38); }
+.btn-submit:disabled { background: var(--faint); color: var(--muted); box-shadow: none; cursor: default; }
+
+/* ── SYNC PILL ────────────────────────────────────────────── */
+.sync-pill {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--font-head); font-size: 11px; font-weight: 600; letter-spacing: .08em;
+  padding: 8px 20px; border-radius: 999px; z-index: 75;
+  box-shadow: var(--shadow);
+  display: flex; align-items: center; gap: 8px;
+}
+.sync-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold); animation: dot-pulse 1.2s ease-in-out infinite;
+}
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .4; transform: scale(.7); }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════ -->
+<header>
+  <div class="hw">
+    <div class="h-top">
+      <div class="brand">
+        <div class="brand-icon-box">
+          <img class="brand-icon" src="foxx-pig-wash/icon.png" alt="Foxx" />
+        </div>
+        <div class="brand-text">
+          <div class="brand-name">Foxx Canada</div>
+          <div class="gold-bar"></div>
+          <div class="brand-sub">Pig Wash Board</div>
+        </div>
+      </div>
+      <div class="h-actions">
+        <button class="btn-export" onclick="exportCSV()">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Export
+        </button>
+        <button class="btn-add" onclick="openForm()">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Pig In
+        </button>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat amber">
+        <div class="stat-accent"></div>
+        <div class="stat-n" id="st-in">0</div>
+        <div class="stat-lbl">In shop</div>
+      </div>
+      <div class="stat green">
+        <div class="stat-accent"></div>
+        <div class="stat-n" id="st-ready">0</div>
+        <div class="stat-lbl">Ready to ship</div>
+      </div>
+      <div class="stat red">
+        <div class="stat-accent"></div>
+        <div class="stat-n" id="st-reb">0</div>
+        <div class="stat-lbl">Needs rebuild</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ MAIN ═════════════════════════════════════════════ -->
+<main>
+  <div id="banner"></div>
+  <div class="pills" id="pills"></div>
+  <div class="search-wrap">
+    <div class="search-ico">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+    <input class="search" id="search" placeholder="Search S/N, company, operator…" oninput="render()" />
+  </div>
+  <div id="list"></div>
+</main>
+
+<div id="modal"></div>
+<div class="sync-pill" id="sync" style="display:none">
+  <div class="sync-dot"></div>
+  Syncing
+</div>
+
+<script>
+/* ===== CONFIG ==============================================
+   Paste your Firebase Realtime Database URL below.
+   Example: https://your-project-default-rtdb.firebaseio.com
+   ========================================================= */
+const DB_URL = "PASTE_YOUR_FIREBASE_URL_HERE";
+/* ========================================================= */
+
+const SIZES = ['24"','30"','36"','42"','Other'];
+let pigs = {};
+let filter = "all";
+let expandedId = null;
+
+const configured = () => DB_URL.startsWith("https://");
+const api = (path, opts) => fetch(DB_URL + path + ".json", opts);
+const todayISO = () => new Date().toISOString().slice(0,10);
+const fmt = iso => {
+  if(!iso) return "—";
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-CA",{month:"short",day:"numeric"});
+};
+const esc = s => (s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const statusOf = p => p.shippedDate ? "shipped" : p.completedDate ? "washed" : "inshop";
+const META = {
+  inshop: {label:"In Shop",  cls:"inshop"},
+  washed: {label:"Washed",   cls:"washed"},
+  shipped:{label:"Shipped",  cls:"shipped"},
+};
+
+function showBanner(msg, cls){
+  document.getElementById("banner").innerHTML =
+    msg ? `<div class="banner ${cls}">${msg}</div>` : "";
+}
+function syncing(on){
+  document.getElementById("sync").style.display = on ? "flex" : "none";
+}
+
+/* ── Export ─────────────────────────────────────────────── */
+function exportCSV(){
+  const cols = [
+    ["Date Received","received"],["Pig Size","size"],["Qty",p=>parseInt(p.qty)||1],["S/N","sn"],
+    ["Company","company"],["Operator","operator"],["Status",p=>META[statusOf(p)].label],
+    ["Date Washed","completedDate"],["Date Shipped","shippedDate"],
+    ["Picked Up By","pickedUpBy"],["BoL #","bol"],["Norm CPM","cpm"],
+    ["Needs Rebuild",p=>p.rebuild?"YES":""],["Notes","notes"],
+  ];
+  const cell = v => `"${(v??"").toString().replace(/"/g,'""')}"`;
+  const rows = Object.values(pigs)
+    .sort((a,b)=>(a.received||"").localeCompare(b.received||""))
+    .map(p => cols.map(([_,k]) => cell(typeof k==="function"?k(p):p[k])).join(","));
+  const csv = cols.map(c=>cell(c[0])).join(",") + "\n" + rows.join("\n");
+  const blob = new Blob(["﻿"+csv],{type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "pig-wash-data-" + todayISO() + ".csv";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ── Data ───────────────────────────────────────────────── */
+async function load(quiet){
+  if(!configured()){
+    showBanner("Setup needed: open this file in a text editor and paste your Firebase database URL into the DB_URL variable.","warn");
+    render(); return;
+  }
+  if(!quiet) syncing(true);
+  try{
+    const res = await api("/pigs");
+    if(res.status===401||res.status===403) throw {rules:true};
+    if(!res.ok) throw new Error(res.status);
+    pigs = (await res.json()) || {};
+    showBanner("");
+  }catch(e){
+    if(e&&e.rules){
+      showBanner("Database is blocking access. In Firebase go to Realtime Database → Rules and set .read and .write to true, then Publish.","err");
+    } else {
+      showBanner("Can't reach the database — check your connection. Changes won't save until it's back.","err");
+    }
+  }
+  syncing(false);
+  render();
+}
+
+async function savePig(p){
+  pigs[p.id] = p; render();
+  if(!configured()) return;
+  try{
+    const res = await api("/pigs/"+p.id,{method:"PUT",body:JSON.stringify(p)});
+    if(res.status===401||res.status===403){
+      showBanner("Save blocked by database rules. Check Firebase Rules.","err"); return;
+    }
+    if(!res.ok) throw new Error(res.status);
+  }catch(e){
+    showBanner("Last change didn't save — check connection and try again.","err");
+  }
+}
+
+let armDelete = null;
+async function deletePig(id){
+  if(armDelete!==id){ armDelete=id; render(); return; }
+  armDelete=null;
+  delete pigs[id]; expandedId=null; render();
+  if(!configured()) return;
+  try{ await api("/pigs/"+id,{method:"DELETE"}); }
+  catch(e){ showBanner("Delete didn't sync — check connection.","err"); }
+}
+
+/* ── Actions ─────────────────────────────────────────────── */
+function markWashed(id){
+  const p=pigs[id]; if(!p) return;
+  p.completedDate=todayISO(); savePig(p);
+}
+
+function markShipped(id){
+  const p=pigs[id]; if(!p) return;
+  document.getElementById("modal").innerHTML = `
+  <div class="overlay" onclick="if(event.target===this) closeForm()">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-top">
+        <span class="sheet-title">Ship Pig — ${esc(p.sn)}</span>
+        <button class="sheet-x" onclick="closeForm()">✕</button>
+      </div>
+      <label class="f-lbl">Picked up by / shipped via</label>
+      <input class="inp" id="s-who" placeholder="Carrier or contact name">
+      <label class="f-lbl">BoL # <span style="opacity:.5;font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <input class="inp" id="s-bol" placeholder="Bill of Lading number">
+      <button class="btn-submit" onclick="confirmShip('${id}')">Mark Shipped Today</button>
+    </div>
+  </div>`;
+}
+
+function confirmShip(id){
+  const p=pigs[id]; if(!p) return;
+  p.shippedDate=todayISO();
+  p.pickedUpBy=document.getElementById("s-who").value.trim();
+  p.bol=document.getElementById("s-bol").value.trim();
+  savePig(p); closeForm();
+}
+
+function toggleRebuild(id){
+  const p=pigs[id]; if(!p) return;
+  p.rebuild=!p.rebuild; savePig(p);
+}
+
+function setField(id,field,val){
+  const p=pigs[id]; if(!p) return;
+  p[field]=val; savePig(p);
+}
+
+function toggleExpand(id){
+  expandedId = expandedId===id ? null : id;
+  armDelete=null; render();
+}
+function setFilter(f){ filter=f; render(); }
+
+/* ── Render ──────────────────────────────────────────────── */
+function render(){
+  const arr = Object.values(pigs).sort((a,b)=>(b.id||"").localeCompare(a.id||""));
+  const nOf = p => Math.max(1,parseInt(p.qty)||1);
+  const sum = list => list.reduce((t,p)=>t+nOf(p),0);
+  const counts = {
+    inshop:  sum(arr.filter(p=>statusOf(p)==="inshop")),
+    washed:  sum(arr.filter(p=>statusOf(p)==="washed")),
+    shipped: sum(arr.filter(p=>statusOf(p)==="shipped")),
+    rebuild: sum(arr.filter(p=>p.rebuild)),
+  };
+  document.getElementById("st-in").textContent    = counts.inshop;
+  document.getElementById("st-ready").textContent = counts.washed;
+  document.getElementById("st-reb").textContent   = counts.rebuild;
+
+  const FILTERS = [
+    ["all",    `All (${arr.length})`],
+    ["inshop", `In Shop (${counts.inshop})`],
+    ["washed", `Ready (${counts.washed})`],
+    ["shipped",`Shipped (${counts.shipped})`],
+    ["rebuild",`⚠ Rebuild (${counts.rebuild})`],
+  ];
+  document.getElementById("pills").innerHTML = FILTERS.map(([k,l]) =>
+    `<button class="pill ${filter===k?"on":""}" onclick="setFilter('${k}')">${l}</button>`).join("");
+
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  const visible = arr.filter(p => {
+    const s = statusOf(p);
+    if(filter==="rebuild" && !p.rebuild) return false;
+    if(filter!=="all" && filter!=="rebuild" && s!==filter) return false;
+    if(q) return (p.sn||"").toLowerCase().includes(q)||
+                 (p.company||"").toLowerCase().includes(q)||
+                 (p.operator||"").toLowerCase().includes(q);
+    return true;
+  });
+
+  const list = document.getElementById("list");
+  if(visible.length===0){
+    list.innerHTML = `<div class="empty">
+      <div class="e-ico">🐷</div>
+      <h3>No pigs here</h3>
+      <p>Tap <b>Pig In</b> when one arrives.</p>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = visible.map(p => {
+    const s=statusOf(p), m=META[s], open=expandedId===p.id;
+    return `
+    <div class="card${p.rebuild?" rebuild":""}${open?" open":""}">
+      <button class="card-head" onclick="toggleExpand('${p.id}')">
+        <div class="pig-ico"><img src="foxx-pig-wash/icon.png" alt=""></div>
+        <div class="sn-box">
+          <span class="sn-lbl">S/N</span>
+          <span class="sn-val">${esc(p.sn)}</span>
+        </div>
+        <div class="card-mid">
+          <div class="chips">
+            <span class="chip ${m.cls}">${m.label}</span>
+            ${p.rebuild?'<span class="chip flag">⚠ Rebuild</span>':''}
+          </div>
+          <div class="card-who">${esc(p.size)}${(parseInt(p.qty)||1)>1?` × ${parseInt(p.qty)} pigs`:""}${p.company?" · "+esc(p.company):""}${p.operator?" / "+esc(p.operator):""}</div>
+          <div class="card-dates">In ${fmt(p.received)}${p.completedDate?" · Washed "+fmt(p.completedDate):""}${p.shippedDate?" · Out "+fmt(p.shippedDate):""}</div>
+        </div>
+        <span class="card-caret"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>
+      </button>
+      ${open ? `
+      <div class="card-body">
+        <div class="acts">
+          ${s==="inshop"?`<button class="act wash" onclick="markWashed('${p.id}')">✓ Mark Washed</button>`:""}
+          ${s==="washed"?`<button class="act ship" onclick="markShipped('${p.id}')">⇪ Mark Shipped</button>`:""}
+          <button class="act flag${p.rebuild?" on":""}" onclick="toggleRebuild('${p.id}')">${p.rebuild?"Clear Rebuild Flag":"⚠ Flag Rebuild"}</button>
+        </div>
+        <div class="g2">
+          <div>
+            <label class="f-lbl">Norm CPM</label>
+            <input class="inp" value="${esc(p.cpm)}" placeholder="e.g. 120" onchange="setField('${p.id}','cpm',this.value)">
+          </div>
+          <div>
+            <label class="f-lbl">BoL #</label>
+            <input class="inp" value="${esc(p.bol)}" onchange="setField('${p.id}','bol',this.value)">
+          </div>
+        </div>
+        <label class="f-lbl">Notes</label>
+        <textarea class="inp" rows="2" placeholder="Condition in, brush wear, who picked up…" onchange="setField('${p.id}','notes',this.value)">${esc(p.notes)}</textarea>
+        ${p.pickedUpBy?`<p class="pickup-by">Picked up by: <b>${esc(p.pickedUpBy)}</b></p>`:""}
+        <button class="btn-del" onclick="deletePig('${p.id}')">${armDelete===p.id?"Tap again to confirm delete":"Delete record"}</button>
+      </div>`:""}
+    </div>`;
+  }).join("");
+}
+
+/* ── Add form ─────────────────────────────────────────────── */
+let formSize = '42"';
+function openForm(){
+  formSize='42"';
+  document.getElementById("modal").innerHTML = `
+  <div class="overlay" onclick="if(event.target===this) closeForm()">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-top">
+        <span class="sheet-title">Pig In</span>
+        <button class="sheet-x" onclick="closeForm()">✕</button>
+      </div>
+      <div class="g2">
+        <div>
+          <label class="f-lbl">Date received</label>
+          <input class="inp" type="date" id="f-date" value="${todayISO()}">
+        </div>
+        <div>
+          <label class="f-lbl">How many pigs</label>
+          <input class="inp" type="number" id="f-qty" inputmode="numeric" min="1" max="20" value="1" oninput="renderSnInputs()">
+        </div>
+      </div>
+      <label class="f-lbl">S/N for each pig *</label>
+      <div id="f-sns">
+        <input class="inp" style="margin-bottom:6px" placeholder="S/N — pig 1" oninput="checkSns()">
+      </div>
+      <label class="f-lbl">Pig size</label>
+      <div class="sizes" id="f-sizes">${SIZES.map(s=>
+        `<button class="sz ${s===formSize?"on":""}" onclick="pickSize(this,'${esc(s)}')">${s}</button>`).join("")}</div>
+      <div class="g2">
+        <div>
+          <label class="f-lbl">Company</label>
+          <input class="inp" id="f-co" placeholder="">
+        </div>
+        <div>
+          <label class="f-lbl">Operator</label>
+          <input class="inp" id="f-op" placeholder="">
+        </div>
+      </div>
+      <label class="f-lbl">Condition in / notes</label>
+      <textarea class="inp" id="f-notes" rows="2" placeholder="Brush pig, heavy wax…"></textarea>
+      <button class="btn-submit" id="f-go" disabled onclick="submitForm()">Add to Board</button>
+    </div>
+  </div>`;
+}
+
+function pickSize(btn,s){
+  formSize=s.replace(/&quot;/g,'"');
+  document.querySelectorAll("#f-sizes .sz").forEach(b=>b.classList.toggle("on",b===btn));
+}
+function renderSnInputs(){
+  const n=Math.max(1,Math.min(20,parseInt(document.getElementById("f-qty").value)||1));
+  const box=document.getElementById("f-sns");
+  const prev=[...box.querySelectorAll("input")].map(i=>i.value);
+  box.innerHTML=Array.from({length:n},(_,i)=>
+    `<input class="inp" style="margin-bottom:6px" placeholder="S/N — pig ${i+1}" value="${esc(prev[i]||"")}" oninput="checkSns()">`).join("");
+  checkSns();
+}
+function checkSns(){
+  const vals=[...document.querySelectorAll("#f-sns input")].map(i=>i.value.trim());
+  document.getElementById("f-go").disabled=vals.length===0||vals.some(v=>!v);
+}
+function closeForm(){ document.getElementById("modal").innerHTML=""; }
+function submitForm(){
+  const sns=[...document.querySelectorAll("#f-sns input")].map(i=>i.value.trim());
+  if(sns.length===0||sns.some(v=>!v)) return;
+  const received=document.getElementById("f-date").value||todayISO();
+  const company=document.getElementById("f-co").value.trim();
+  const operator=document.getElementById("f-op").value.trim();
+  const notes=document.getElementById("f-notes").value.trim();
+  const batch=Date.now().toString(36);
+  sns.forEach((sn,i)=>{
+    const p={
+      id:batch+"-"+i+Math.random().toString(36).slice(2,4),
+      received, size:formSize, sn, company, operator, notes,
+      cpm:"", completedDate:"", shippedDate:"", bol:"", pickedUpBy:"", rebuild:false,
+    };
+    savePig(p);
+  });
+  closeForm();
+}
+
+/* ── Sync ────────────────────────────────────────────────── */
+load();
+setInterval(()=>load(true), 20000);
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible") load(true);
+});
+</script>
+</body>
+</html>
